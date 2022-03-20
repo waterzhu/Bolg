@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>前方，思考很有用 | 洛斯里克王城</title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">前方，思考很有用</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+        <div class="post-main-title">
+            DPU软硬件说明
+        </div>
+        <div class="post-meta">
+            2022-03-20
+        </div>
+    
+
+    <div class="post-md">
+        <h3 id="BlueField2硬件介绍"><a href="#BlueField2硬件介绍" class="headerlink" title="BlueField2硬件介绍"></a>BlueField2硬件介绍</h3><p>首先来看下BlueField2的官方硬件文档介绍 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/BlueField2DPUENUG/Supported+Interfaces">BF2硬件介绍文档</a>，文档中对BF的硬件接口以及安装提供说明</p>
+<p>下面两张图分别是BlueField2（MBF2M516A-EEEOT）正反面<br><br><br><br><br><img src="BF2正面.png" alt="BF2正面" width="900" align="bottom" /><br><img src="BF2反面.png" alt="BF2反面" width="900" align="bottom" /></p>
+<h3 id="BF2的特征和描述"><a href="#BF2的特征和描述" class="headerlink" title="BF2的特征和描述"></a>BF2的特征和描述</h3><p>下表来自上述文档，描述了BF2的一些硬件标准以及功能</p>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PCIe</td>
+<td>PCIe4.0(16GT&#x2F;s) 通过 x8&#x2F;x16的插槽</td>
+</tr>
+<tr>
+<td>最高200G的ETH端口</td>
+<td>符合IEEE 802.3标准：200Gb&#x2F;s &#x2F; 100Gb&#x2F;s &#x2F; 50Gb&#x2F;s &#x2F; 40Gb&#x2F;s &#x2F; 25Gb&#x2F;s &#x2F; 10Gb&#x2F;s &#x2F; 1Gb&#x2F;s</td>
+</tr>
+<tr>
+<td>板上存储</td>
+<td>QSPI NOR FLASH 包含256M Firmware image<br> UVPS EEPROM <br> eMMC x8 NAND flash 用于Arm boot，OS和硬盘空间 <br> DDR4 SDRAM 8GB&#x2F;16GB&#x2F;32GB 3200MT&#x2F;s 单通道DDR4 SDRAM 64bit+8bit ECC</td>
+</tr>
+<tr>
+<td>BF2 DPU</td>
+<td>集成了8个64bit Armv8 A72核心，通过mesh网络互相连接。<br> 一个RDM控制器，最高支持200Gb&#x2F;s <br> 一个嵌入的PCIe 交换机</td>
+</tr>
+<tr>
+<td>Overlay 网络</td>
+<td>支持隧道封装，例如BVGRE和VXLAN</td>
+</tr>
+<tr>
+<td>RDMA和ROCE</td>
+<td>提供低延迟高性能的网络</td>
+</tr>
+<tr>
+<td>Nvidia PeerDirect</td>
+<td>通过PCIe总线提供设备间的高效率的RDMA</td>
+</tr>
+<tr>
+<td>存储加速</td>
+<td>为Host卸载特殊的存储任务</td>
+</tr>
+<tr>
+<td>NVMe-oF</td>
+<td>支持Nonvolatile Memory Express (NVMe) over Fabrics 加速</td>
+</tr>
+<tr>
+<td>SR-IOV</td>
+<td>支持SR-IOV，能够提供虚拟机的隔离和保护</td>
+</tr>
+<tr>
+<td>GPU直连</td>
+<td>提供与GPU之间端到端的直连RDMA，可以极大的降低通讯中的延迟</td>
+</tr>
+<tr>
+<td>加密</td>
+<td>支持加密操作，Arm核心提供了bulk crypto的特殊指令，可以加速公钥加密和随机数生成</td>
+</tr>
+<tr>
+<td>安全加速</td>
+<td></td>
+</tr>
+<tr>
+<td>Out-of-Band 管理</td>
+<td>提供1GbE的out-of-band管理口</td>
+</tr>
+<tr>
+<td>BMC</td>
+<td></td>
+</tr>
+<tr>
+<td>PPS IN&#x2F;OUT</td>
+<td>提供IEEE 1588v2 PTP软件解决方案，保证低于20us的精度</td>
+</tr>
+</tbody></table>
+<h3 id="BlueField2软件介绍"><a href="#BlueField2软件介绍" class="headerlink" title="BlueField2软件介绍"></a>BlueField2软件介绍</h3><p><a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/BlueFieldDPUOSv385/NVIDIA+BLUEFIELD+DPU+PLATFORM+OPERATING+SYSTEM+v3.8.5+DOCUMENTATION">BF2的软件相关说明文档</a>详细的描述了BF2的软件安装步骤以及功能如何使用</p>
+<p>下面我将挑选部分简单介绍一下这张卡。</p>
+<p>Nvidia提供了DPU使用的丰富软件包：</p>
+<ul>
+<li>快速轻松地启动初始 Linux 映像</li>
+<li>将现有应用程序移植到 BlueField 并为 BlueField 开发新应用程序</li>
+<li>修补、配置、重建、更新或以其他方式自定义您的映像</li>
+<li>使用开源开发工具调试、分析和调整他们的开发系统，充分利用多样化和充满活力的 Arm 生态系统</li>
+</ul>
+<p>BlueField 系列 DPU 设备将 64 位 Armv8 A72 内核阵列与 NVIDIA® ConnectX® 互连相结合。标准 Linux 发行版在 Arm 内核上运行，允许使用常见的开源开发工具。开发人员应该发现熟悉且直观的编程环境，这反过来又使他们能够快速有效地设计、实施和验证他们的控制平面和数据平面应用程序。</p>
+<p>BlueField SW 随附 NVIDIA® BlueField® 参考平台。 BlueField SW 是一个基于 Ubuntu Server 发行版的参考 Linux 发行版，扩展后包括用于 Arm 的 MLNX_OFED 堆栈和支持 NVMe-oF 的 Linux 内核。该软件发行版可以无缝运行所有基于客户的 Linux 应用程序。</p>
+<ul>
+<li>适用于 BlueField 的 Arm 可信固件 (ATF)</li>
+<li>用于 BlueField 的 UEFI</li>
+<li>OpenBMC for BMC (ASPEED 2500) 在开发板上找到</li>
+<li>硬件诊断</li>
+<li>MLNX_OFED 堆栈</li>
+<li>Mellanox MFT(a set of firmware management tools used to: Generate a standard or customized NDIVIA firmware image Querying for firmware information<br>Burn a firmware image)</li>
+</ul>
+<h4 id="调试工具"><a href="#调试工具" class="headerlink" title="调试工具"></a>调试工具</h4><p>BlueField DPU 包括对 Arm DS5 套件的硬件支持以及 CoreSight™ 调试。因此，广泛的商用现成 Arm 调试工具应与 BlueField 无缝协作。 CoreSight 调试器接口可以通过 RShim 接口（USB 或 PCIe，如果使用 DPU）访问，也可以用于使用 OpenOCD 等开源工具进行调试。</p>
+<p>BlueField DPU 还支持无处不在的GDB。</p>
+<h4 id="基于BlueField-的存储设备"><a href="#基于BlueField-的存储设备" class="headerlink" title="基于BlueField 的存储设备"></a>基于BlueField 的存储设备</h4><p>BlueField 软件为构建 JBOF（Just a Bunch of Flash）存储系统提供了基础，包括 NVMe-oF 目标软件、PCIe 交换机支持、NVDIMM-N 支持和 NVMe 磁盘热插拔支持。</p>
+<p>BlueField SW 允许启用 ConnectX 卸载，例如 RDMA&#x2F;RoCE、T10 DIF 签名卸载、纠删码卸载、iSER、存储空间直通等。</p>
+<h4 id="BlueField架构"><a href="#BlueField架构" class="headerlink" title="BlueField架构"></a>BlueField架构</h4><p>BlueField 架构是两个现有的标准现成组件、Arm AArch64 处理器和 ConnectX-5（用于 BlueField）、ConnectX-6 Dx（用于 BlueField-2）或网络控制器的组合，每个组件都有自己丰富的软件生态系统。因此，BlueField 中几乎所有程序员可见的软件接口都来自各个组件的现有标准接口。</p>
+<img src="Interfaces_on_BlueField.png" alt="Interfaces_on_BlueField" width="900" align="bottom" />
+
+<br>                                                                    
+
+<p>Arm 相关接口（包括与引导过程、PCIe 连接和加密操作加速相关的接口）是 Arm 上的标准 Linux 接口。 这些接口由 NVIDIA 提供的驱动程序和低级代码启用，作为 BlueField 软件的一部分，该软件已交付并上传到相应的开源项目，例如 Linux。</p>
+<p>ConnectX 网络控制器相关接口（包括用于以太网和 InfiniBand 连接、RDMA 和 RoCE 以及存储和网络操作加速的接口）与支持 ConnectX 独立网络控制器卡的接口相同。 这些接口利用 MLNX_OFED 软件堆栈和基于 InfiniBand 动词的接口来支持软件。</p>
+<h4 id="系统中的连接"><a href="#系统中的连接" class="headerlink" title="系统中的连接"></a>系统中的连接</h4><p>BlueField DPU 有多个连接（见下图）。 用户可以通过不同的控制台、网络连接和 JTAG 连接器连接到系统。<br><img src="System_Connections.png" alt="System_Connections" width="900" align="bottom" /></p>
+<h5 id="系统控制"><a href="#系统控制" class="headerlink" title="系统控制"></a>系统控制</h5><p>BlueField DPU 有多个控制台界面：</p>
+<ul>
+<li>串行控制台 0（ARM 内核上的 &#x2F;dev&#x2F;ttyAMA0）<ul>
+<li>需要电缆连接到 DPU 25G 上的 NC-SI 连接器</li>
+<li>需要串行电缆到 DPU 100G 上的 3 针连接器</li>
+<li>连接到BF1200平台上的BMC串口</li>
+</ul>
+</li>
+<li>串行控制台 1（ARM 内核上的 &#x2F;dev&#x2F;ttyAMA1，但仅适用于 BF1200 参考平台）<ul>
+<li>ttyAMA1 是 BF1200 前面板上的控制台连接</li>
+</ul>
+</li>
+<li>虚拟 RShim 控制台（ARM 内核上的 &#x2F;dev&#x2F;hvc0）由<ul>
+<li>RShim PCIe 驱动程序（不需要电缆，但系统不能处于隔离模式，因为隔离模式会禁用所需的 PCIe 设备）</li>
+<li>RShim USB 驱动程序（需要 USB 电缆）</li>
+<li>不能同时使用 PCIe 和 USB RShim 接口</li>
+</ul>
+</li>
+</ul>
+<h5 id="网络接口"><a href="#网络接口" class="headerlink" title="网络接口"></a>网络接口</h5><p>DPU 有多个网络接口:</p>
+<ul>
+<li>ConnectX 以太网&#x2F;InfiniBand 接口</li>
+<li>RShim 虚拟以太网接口（通过 USB 或 PCIe）<br>虚拟以太网接口对于调试、安装或基本管理非常有用。主机 DPU 服务器上的接口名称取决于主机操作系统。 Arm 内核上的接口名称通常为“tmfifo_net0”。虚拟网络接口只能以大约 10MB&#x2F;s 的速度运行，不应考虑用于生产网络流量。</li>
+<li>OOB 以太网接口（仅限 BlueField-2）<br>基于 BlueField-2 的平台具有 OOB 1GbE 管理端口。此接口提供到 Arm 内核的 1Gb&#x2F;s 全双工连接。接口名称通常为“oob_net0”。该接口支持与 Arm 内核的 TCP&#x2F;IP 网络连接(例如，用于文件传输协议、SSH 和 PXE 启动)。OOB 端口不是 BlueField-2 引导流的路径（即，任何将 BFB 推送到此端口的尝试都将无效）。</li>
+</ul>
+<h3 id="BF2的工作特性"><a href="#BF2的工作特性" class="headerlink" title="BF2的工作特性"></a>BF2的工作特性</h3><p>下面我将挑选一些比较重要的或者有意思的特性介绍给大家</p>
+<h4 id="一、DPU包含三种工作模式"><a href="#一、DPU包含三种工作模式" class="headerlink" title="一、DPU包含三种工作模式"></a>一、DPU包含三种工作模式</h4><h5 id="1-Embedded-CPU-Function-ECPF"><a href="#1-Embedded-CPU-Function-ECPF" class="headerlink" title="1. Embedded CPU Function(ECPF)"></a>1. Embedded CPU Function(ECPF)</h5><p>DPU卡上的资源和功能被Arm系统所控制，Host可以看见网口，但是只能对它进行有限的操作</p>
+<ul>
+<li>只有在 DPU 上的驱动程序加载完成并完成网卡配置后，才能加载主机端的驱动程序。</li>
+<li>所有 ICM（接口配置内存）都由 ECPF 分配并驻留在 DPU 的内存中。</li>
+<li>ECPF 控制和配置 NIC 嵌入式交换机，这意味着进出主机 (DPU) 接口的流量始终位于 Arm 端。</li>
+</ul>
+<p>所有与Host的网络连接都通过Arm系统的OVS进行转发，DPU与Host的通信需要在OVS加载后才能进行。</p>
+<img src="embedded-mode.png" alt="embedded-mode" width="500" align="bottom" />
+
+<p>只有两种方法将流量传递到主机接口: </p>
+<ul>
+<li>使用representor将流量转发到主机(每个进出主机的数据包也将由嵌入式 Arm 端的网络接口处理) </li>
+<li>将规则push到DPU上的虚拟交换机，允许并卸载这些流量。</li>
+</ul>
+<h5 id="2-Restricted-DPU-Host-Mode"><a href="#2-Restricted-DPU-Host-Mode" class="headerlink" title="2. Restricted DPU Host Mode"></a>2. Restricted DPU Host Mode</h5><p>受限模式是嵌入式模式的一种特殊化，它实现了一个额外的安全层，防止主机系统管理员从主机访问 DPU。 启用受限模式后，数据中心管理员应完全通过 Arm 内核和&#x2F;或 BMC 连接而不是通过主机来控制 DPU。</p>
+<p>出于安全和隔离目的，可以限制主机执行可能危及 DPU 的操作。将 DPU 主机更改为受限模式时，可以单独限制以下操作：</p>
+<ul>
+<li>端口所有权 - 主机不能将自己指定为端口所有者</li>
+<li>硬件计数器——主机无权访问硬件计数器</li>
+<li>跟踪器功能被阻止</li>
+<li>RShim 接口被阻塞</li>
+<li>固件闪存受限</li>
+</ul>
+<h5 id="3-Separated-Host-Mode"><a href="#3-Separated-Host-Mode" class="headerlink" title="3. Separated Host Mode"></a>3. Separated Host Mode</h5><p>在该模式下，将Network Function分配给 Arm 内核和 x86 主机内核。在流量同时发送到两个PF的场景中，端口&#x2F;功能是对称的。这些Function每一个都有自己的 MAC 地址，允许一个与另一个通信，并且可以发送和接收以太网和 RDMA over Converged Ethernet (RoCE) 流量。 这两个功能之间的带宽份额相等。<br>这两个Function之间没有依赖关系，它们可以同时或单独运行。主机可以作为两台独立的主机与嵌入式Function进行通信，每台主机都有自己的 MAC 和 IP 地址（配置为标准接口）<br>在分离模式下，主机管理员是一个可信赖的参与者，可以执行与任一网络Function相关的所有配置和管理操作。</p>
+<img src="separated-mode.png" alt="separated-mode" width="400" align="bottom" />
+
+<p>此模式启用相同的 SmartNIC 操作模型（没有单独的控制平面）。 在这种情况下，Arm 控制平面可以用于不同的Function，但对主机转向Function没有任何控制。</p>
+<p>该模式的局限性如下：</p>
+<ul>
+<li>任一Function均不支持 Switchdev（虚拟交换机卸载）模式</li>
+<li>SR-IOV 仅在主机端支持</li>
+</ul>
+<h4 id="二、Kernel-representor-mode"><a href="#二、Kernel-representor-mode" class="headerlink" title="二、Kernel representor mode"></a>二、Kernel representor mode</h4><p>BlueField® DPU 使用 netdev representor来映射每个主机端物理和虚拟功能：</p>
+<ul>
+<li>作为隧道将运行在 Arm 内核上的虚拟交换机或应用程序的流量传递到 Arm 侧的相关 PF 或 VF。</li>
+<li>作为通道将嵌入式交换机配置为相应的representor的规则。</li>
+</ul>
+<p>这些representor用作连接到 OVS 或在 Arm 核心上运行的任何其他虚拟交换机的虚拟端口。</p>
+<p>在 ECPF 所有权模式下，我们看到 DPU 的每个网络端口有 2 个representor：一个用于上行链路，另一个用于主机端 PF（即使未在主机端探测 PF，也会创建 PF 表示器）。对于在主机端创建的每个 VF，将在 Arm 端创建相应的representor。表示器的命名约定如下：</p>
+<ul>
+<li>Uplink representors: p<port_number></li>
+<li>PF representors: pf<port_number>hpf</li>
+<li>VF representors: pf<port_number>vf<function_number></li>
+</ul>
+<p>下图显示了在主机端暴露的 PCI Function与representor之间的映射。</p>
+<img src="Kernel_Representors_Model.png" alt="Kernel_Representors_Model" width="900" align="bottom" />
+<br>
+红色箭头表示数据包通过representor传输，绿色箭头表示当流规则offload到嵌入的交换机上的情况。
+
+<p>Host上网口的MTU必须设置的比uplink和对应的representor的MTU要小。</p>
+<p>可以通过以下命令关闭和激活pf与vf的representor:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt41686_pciconf0 s NUM_Of_PF=0</span><br><span class="line">mlxconfig -d /dev/mst/mt41686_pciconf0 s NUM_Of_PF=1</span><br></pre></td></tr></table></figure>
+
+<h4 id="三、Scalable-Functions"><a href="#三、Scalable-Functions" class="headerlink" title="三、Scalable Functions"></a>三、Scalable Functions</h4><p>可扩展功能 (SF) 是一种轻量级功能，具有部署它的父 PCIe 功能。一个 mlx5 SF 有自己的Function能力和自己的资源。 这意味着 SF 有自己的专用队列（txq、rxq、cq、eq），这些队列既不共享也不从父 PCIe 功能中窃取。</p>
+<p>使用 SF 不需要系统 BIOS 的特殊支持。 SF 与 PCIe SR-IOV 虚拟功能共存。 SF 不需要启用 PCIe SR-IOV。</p>
+<img src="sf-vf-co-exist.png" alt="sf-vf-co-exist.png" width="900" align="bottom" />
+在外部控制器（例如 DPU）上添加 SF 时，用户必须提供控制器编号。 在单主机 DPU 的情况下，只有一个控制器从 1 号控制器开始。
+PS：SF number ≥1000 is 为 virtio-net controller 保留。
+
+<h4 id="四、RDMA-Stack-Support-on-Host-and-Arm-System"><a href="#四、RDMA-Stack-Support-on-Host-and-Arm-System" class="headerlink" title="四、RDMA Stack Support on Host and Arm System"></a>四、RDMA Stack Support on Host and Arm System</h4><p>待补充</p>
+<h4 id="五、VirtIO-Emulated-Devices"><a href="#五、VirtIO-Emulated-Devices" class="headerlink" title="五、VirtIO Emulated Devices"></a>五、VirtIO Emulated Devices</h4><p>此功能使用户能够在连接了 NVIDIA® BlueField®-2 DPU 的系统中创建 VirtIO-net 模拟 PCIe 设备。 这是由 DPU 中的 virtio-net-controller 软件模块完成的。 Virtio-net 仿真设备允许用户在插入 DPU 的主机系统中热插拔多达 16 个 virtio-net PCIe PF 以太网 NIC 设备或 504 个 virtio-net PCIe VF 以太网 NIC 设备。</p>
+<h5 id="1-Virtio-net-controller"><a href="#1-Virtio-net-controller" class="headerlink" title="1. Virtio-net-controller"></a>1. Virtio-net-controller</h5><p>Virtio-net-controller 是一个运行在 DPU 上的 systemd 服务，带有一个用户界面前端来与后台服务进行通信。 为主机上创建的每个 virtio-net 设备创建一个 SF 表示器。 Virtio-net 控制器仅使用 SF 编号≥1000。 有关详细信息，请参阅“可扩展函数”部分。</p>
+<h5 id="2-VirtIO-net-PF-Devices"><a href="#2-VirtIO-net-PF-Devices" class="headerlink" title="2. VirtIO-net PF Devices"></a>2. VirtIO-net PF Devices</h5><img src="virtio-pfs.png" alt="svirtio-pfs.png" width="900" align="bottom" />
+
+<h5 id="3-Virtio-net-SR-IOV-VF-Devices"><a href="#3-Virtio-net-SR-IOV-VF-Devices" class="headerlink" title="3. Virtio-net SR-IOV VF Devices"></a>3. Virtio-net SR-IOV VF Devices</h5><p>只支持静态创建的PF，暂时不支持热插拔的PF</p>
+<img src="virtio-vfs.png" alt="virtio-vfs.png" width="900" align="bottom" />
+
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 喵帕斯~</span>
+    <span>来自洛斯里克王城的不死人 <a target="_blank" href="https://www.zhihu.com/people/cerbons">WaterZhu</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
