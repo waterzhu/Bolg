@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>前方，思考很有用 | 洛斯里克王城</title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">前方，思考很有用</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+        <div class="post-main-title">
+            DPU开发运行环境安装
+        </div>
+        <div class="post-meta">
+            2022-03-21
+        </div>
+    
+
+    <div class="post-md">
+        <h3 id="DPU运行环境安装"><a href="#DPU运行环境安装" class="headerlink" title="DPU运行环境安装"></a>DPU运行环境安装</h3><h4 id="硬件安装"><a href="#硬件安装" class="headerlink" title="硬件安装"></a>硬件安装</h4><p>硬件安装参考<a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/BlueField2DPUENUG/Hardware+Installation#heading-IdentifytheDPUinyourSystem">Nvidia DPU硬件安装文档</a></p>
+<p>在硬件安装上需要注意：硬件安装需要x8的pcie接口，需要注意DPU的散热。本人在1U设备上安装时，刚开始没有散热装置，DPU过热会导致DPU熔断，具体表现为在Host中查看不到DPU设备。由于当时DPU上没有运行任何负载，并没有考虑是过热引起的。目前在DPU前放置一个风扇，可以保证DPU不过热。</p>
+<h4 id="Doca及其他软件安装"><a href="#Doca及其他软件安装" class="headerlink" title="Doca及其他软件安装"></a>Doca及其他软件安装</h4><p>DOCA全称为片上数据中心基础设施架构(Data-Center-Infrastructure-On-A-Chip Architecture).通过 NVIDIA® DOCA™ SDK（软件开发套件），开发者能够使用行业标准 API 基于 NVIDIA BlueField® 数据处理器 (DPU) 快速创建应用程序和服务。</p>
+<img src="gtc21-doca-overview-page-images-table.png" alt="gtc21-doca-overview-page-images-table" width="900" align="bottom" />
+
+<p><strong>SDK 关键组件</strong></p>
+<ul>
+<li>行业标准 API：DPDK、SPDK、P4</li>
+<li>网络加速 SDK：ASAP2 SDN、Emulated VirtIO、P4、5T for 5G 技术</li>
+<li>安全加速 SDK：inline 加密、深度数据包检测</li>
+<li>存储加速 SDK：存储 Emulation 和虚拟化、加密和压缩</li>
+<li>RDMA 加速 SDK：UCX、RDMA Verbs、GPUDirect®</li>
+<li>管理 SDK：部署、provisioning、service orchestration</li>
+<li>用户空间接口和内核空间接口</li>
+</ul>
+<p>安装Doca，参考<a target="_blank" rel="noopener" href="https://docs.nvidia.com/doca/sdk/installation-guide/index.html">安装文档</a></p>
+<p>需要注意Host的OS与kernel版本需要严格符合要求，当前仅支持下列的OS和对应的kernel</p>
+<table>
+<thead>
+<tr>
+<th>Host Operation System</th>
+<th>Kernel Support</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CentOS 7.6</td>
+<td>3.10.0-957.el7.x86_64</td>
+</tr>
+<tr>
+<td>CentOS 8.0</td>
+<td>4.18.0-80.el8.x86_64</td>
+</tr>
+<tr>
+<td>CentOS 8.2</td>
+<td>4.18.0-193.el8.x86_64</td>
+</tr>
+<tr>
+<td>RHEL 7.6</td>
+<td>3.10.0-957.el7.x86_64</td>
+</tr>
+<tr>
+<td>RHEL 8.0</td>
+<td>4.18.0-80.el8.x86_64</td>
+</tr>
+<tr>
+<td>RHEL 8.2</td>
+<td>4.18.0-193.el8.x86_64</td>
+</tr>
+<tr>
+<td>Ubuntu 18.04</td>
+<td>4.15.0-20-generic</td>
+</tr>
+<tr>
+<td>Ubuntu 20.04</td>
+<td>5.4.0-26-generic</td>
+</tr>
+</tbody></table>
+<p>Nvidia推荐使用Nvidia SdkManager安装Doca，<a target="_blank" rel="noopener" href="https://docs.nvidia.com/sdk-manager/sdkm-command-line-install/index.html#example">参考文档</a></p>
+<p>非root用户，使用如下命令安装Doca</p>
+<p><code>sdkmanager --cli install --logintype devzone --product DOCA --host --target BLUEFIELD2_DPU_TARGETS --targetos Linux --version 1.2.1 --flash all</code></p>
+<p>经过本人实验：</p>
+<ul>
+<li>在Centos 7.6上安装会缺少依赖，需要手动安装</li>
+<li>在Ubuntu 20.04安装没有任何问题。</li>
+</ul>
+<p>所以后续实验均在Ubuntu20.04上进行</p>
+<p>在使用SDK Manager安装Doca时，还会在Host上安装DPU的运行时环境和容器开发环境，同时安装DPU的片上系统，设置登录用户名和密码。</p>
+<p>完成后可以在Host上通过ssh连接到DPU的片上系统，DPU通过Rshim，生成一张网卡，默认ip为192.168.100.2</p>
+<p>安装完成后使用命令：</p>
+<p><code>sudo /etc/init.d/openibd restart</code></p>
+<p>重新加载驱动，可以在Host上查看DPU的网口</p>
+<p><img src="Host_dpu_port.png" alt="Host_dpu_port" width="700" align="bottom" /><br></p>
+<p>DPU卡上系统为Ubuntu20.04，自带的DPDK版本为20.11<br>登录到DPU查看基本系统信息，操作系统入如下所示：</p>
+<p><img src="DPU_os.png" alt="DPU_os" width="900" align="bottom" /><br></p>
+<p>DPU片上的Arm核心如下所示</p>
+<p><img src="DPU_cpu.png" alt="DPU_cpu" width="900" align="bottom" /><br></p>
+<p>DPU内存为16GB</p>
+<p><img src="DPU_RAM.png" alt="DPU_RAM" width="900" align="bottom" /><br>\</p>
+<p>至此，我们完成了DPU运行环境和开发环境的安装</p>
+
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 喵帕斯~</span>
+    <span>来自洛斯里克王城的不死人 <a target="_blank" href="https://www.zhihu.com/people/cerbons">WaterZhu</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
